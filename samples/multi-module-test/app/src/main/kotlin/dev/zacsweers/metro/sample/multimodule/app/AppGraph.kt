@@ -25,7 +25,6 @@ interface AppGraph {
   @DependencyGraph.Factory
   interface Factory {
     fun create(
-      @Extends childGraph: ChildGraph,
       @Includes aggregatorGraph: AggregatorGraph,
     ): AppGraph
   }
