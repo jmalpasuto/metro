@@ -8,10 +8,13 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkManager
 import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Multibinds
 import dev.zacsweers.metro.Provider
 import dev.zacsweers.metro.Provides
+import kotlin.random.Random
 import kotlin.reflect.KClass
 
 @DependencyGraph(AppScope::class)
@@ -42,4 +45,12 @@ interface AppGraph {
   fun interface Factory {
     fun create(@Provides application: Application): AppGraph
   }
+}
+
+@BindingContainer
+@ContributesTo(AppScope::class)
+object TestContainer {
+
+  @Provides
+  fun providesDouble(): Double = Random.nextDouble()
 }
