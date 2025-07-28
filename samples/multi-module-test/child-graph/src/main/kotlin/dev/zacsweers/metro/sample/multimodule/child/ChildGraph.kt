@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package dev.zacsweers.metro.sample.multimodule.child
 
+import dev.zacsweers.metro.ContributesGraphExtension
 import dev.zacsweers.metro.DependencyGraph
 import dev.zacsweers.metro.Extends
 import dev.zacsweers.metro.Inject
@@ -12,6 +13,7 @@ import dev.zacsweers.metro.sample.multimodule.ChildScope
 import dev.zacsweers.metro.sample.multimodule.ItemService
 import dev.zacsweers.metro.sample.multimodule.MessageService
 import dev.zacsweers.metro.sample.multimodule.NumberService
+import dev.zacsweers.metro.sample.multimodule.ParentScope
 import dev.zacsweers.metro.sample.multimodule.parent.ParentGraph
 
 /**
@@ -19,7 +21,7 @@ import dev.zacsweers.metro.sample.multimodule.parent.ParentGraph
  * the parent graph.
  */
 @SingleIn(ChildScope::class)
-@DependencyGraph(ChildScope::class, isExtendable = true)
+@ContributesGraphExtension(ChildScope::class, isExtendable = true)
 interface ChildGraph {
   /** Access the message service from the parent graph. */
   val messageService: MessageService
@@ -34,10 +36,10 @@ interface ChildGraph {
   @Named("combined") val combinedMessage: String
 
   /** Factory for creating the child graph. */
-  @DependencyGraph.Factory
+  @ContributesGraphExtension.Factory(ParentScope::class)
   interface Factory {
     /** Create a child graph with the parent graph as a dependency. */
-    fun create(@Extends parentGraph: ParentGraph): ChildGraph
+    fun create(): ChildGraph
   }
 
   /** Provides an item service implementation. */

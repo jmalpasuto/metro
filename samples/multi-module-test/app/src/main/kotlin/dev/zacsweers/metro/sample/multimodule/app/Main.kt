@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package dev.zacsweers.metro.sample.multimodule.app
 
+import dev.zacsweers.metro.asContribution
 import dev.zacsweers.metro.createGraph
 import dev.zacsweers.metro.createGraphFactory
 import dev.zacsweers.metro.sample.multimodule.aggregator.AggregatorGraph
@@ -13,7 +14,7 @@ fun createAppGraph(): AppGraph {
   val parentGraph = createGraph<ParentGraph>()
 
   // Create the child graph, extending the parent graph
-  val childGraph = createGraphFactory<ChildGraph.Factory>().create(parentGraph)
+  val childGraph = parentGraph.asContribution<ChildGraph.Factory>().create()
 
   // Create the aggregator graph
   val aggregatorGraph = createGraph<AggregatorGraph>()
@@ -21,7 +22,7 @@ fun createAppGraph(): AppGraph {
   // Create the app graph, extending the parent graph and including the child and aggregator graphs
   val appGraph =
     createGraphFactory<AppGraph.Factory>()
-      .create(childGraph = childGraph, aggregatorGraph = aggregatorGraph)
+      .create(aggregatorGraph = aggregatorGraph)
 
   return appGraph
 }
