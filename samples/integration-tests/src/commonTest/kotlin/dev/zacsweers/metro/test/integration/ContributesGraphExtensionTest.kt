@@ -21,10 +21,30 @@ class ContributesGraphExtensionTest {
     assertEquals(int, 0)
   }
 
+  @Test
+  fun nested() {
+    val exampleGraph = createGraph<SimpleScenario.ExampleGraph>()
+    val loggedInGraph =
+      exampleGraph.asContribution<SimpleScenario.LoggedInGraph.Factory>().createLoggedInGraph()
+    val featureGraph =
+      loggedInGraph.asContribution<SimpleScenario.FeatureGraph.Factory>().createFeatureGraph()
+  }
+
   object SimpleScenario {
     abstract class SimpleApp
 
+    abstract class SimpleFeatureScope
     abstract class SimpleLoggedInScope
+
+    @GraphExtension(SimpleFeatureScope::class)
+    interface FeatureGraph {
+
+      @ContributesTo(SimpleLoggedInScope::class)
+      @GraphExtension.Factory
+      interface Factory {
+        fun createFeatureGraph(): FeatureGraph
+      }
+    }
 
     @GraphExtension(SimpleLoggedInScope::class)
     interface LoggedInGraph {
